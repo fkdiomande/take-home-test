@@ -59,6 +59,13 @@ export class Pharmacy {
         }
     }
 
+    private updateDafalgan(drug: Drug) {
+        this.decreaseBenefit(drug, 2);
+        if (drug.expiresIn < 0) {
+            this.decreaseBenefit(drug, 2);
+        }
+    }
+
     public updateBenefitValue(): Drug[] {
         for (const drug of this.drugs) {
             if (drug.name === "Magic Pill") {
@@ -73,6 +80,9 @@ export class Pharmacy {
                     break;
                 case "Herbal Tea":
                     this.updateHerbalTea(drug);
+                    break;
+                case "Dafalgan":
+                    this.updateDafalgan(drug);
                     break;
                 default:
                     this.updateRegularDrug(drug);

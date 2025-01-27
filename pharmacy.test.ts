@@ -7,4 +7,10 @@ describe("Pharmacy", () => {
             [new Drug("test", 1, 2)],
         );
     });
+
+    it("should decrease the benefit and expiresIn for Dafalgan", (): void => {
+        expect(new Pharmacy([new Drug("Dafalgan", 20, 30)]).updateBenefitValue()).toEqual(
+            [new Drug("Dafalgan", 19, 28)],
+        );
+    });
 });

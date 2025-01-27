@@ -6,6 +6,7 @@ const drugs: Drug[] = [
     new Drug("Herbal Tea", 10, 5),
     new Drug("Fervex", 12, 35),
     new Drug("Magic Pill", 15, 40),
+    new Drug("Dafalgan", 20, 30),
 ];
 const pharmacy: Pharmacy = new Pharmacy(drugs);
 
