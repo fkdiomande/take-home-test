@@ -17,54 +17,66 @@ export class Pharmacy {
         this.drugs = drugs;
     }
 
-    updateBenefitValue(): Drug[] {
-        for (let i = 0; i < this.drugs.length; i++) {
-            if (
-                this.drugs[i].name != "Herbal Tea" &&
-                this.drugs[i].name != "Fervex"
-            ) {
-                if (this.drugs[i].benefit > 0) {
-                    if (this.drugs[i].name != "Magic Pill") {
-                        this.drugs[i].benefit = this.drugs[i].benefit - 1;
-                    }
-                }
-            } else {
-                if (this.drugs[i].benefit < 50) {
-                    this.drugs[i].benefit = this.drugs[i].benefit + 1;
-                    if (this.drugs[i].name == "Fervex") {
-                        if (this.drugs[i].expiresIn < 11) {
-                            if (this.drugs[i].benefit < 50) {
-                                this.drugs[i].benefit = this.drugs[i].benefit + 1;
-                            }
-                        }
-                        if (this.drugs[i].expiresIn < 6) {
-                            if (this.drugs[i].benefit < 50) {
-                                this.drugs[i].benefit = this.drugs[i].benefit + 1;
-                            }
-                        }
-                    }
-                }
+    private increaseBenefit(drug: Drug, amount: number = 1) {
+        if (drug.benefit < 50) {
+            drug.benefit = Math.min(50, drug.benefit + amount);
+        }
+    }
+
+    private decreaseBenefit(drug: Drug, amount: number = 1) {
+        if (drug.benefit > 0) {
+            drug.benefit = Math.max(0, drug.benefit - amount);
+        }
+    }
+
+    private updateFervex(drug: Drug) {
+        if (drug.expiresIn < 0) {
+            drug.benefit = 0;
+            return;
+        }
+
+        this.increaseBenefit(drug);
+
+        if (drug.expiresIn < 10) {
+            this.increaseBenefit(drug);
+        }
+        if (drug.expiresIn < 5) {
+            this.increaseBenefit(drug);
+        }
+    }
+
+    private updateHerbalTea(drug: Drug) {
+        this.increaseBenefit(drug);
+        if (drug.expiresIn < 0) {
+            this.increaseBenefit(drug);
+        }
+    }
+
+    private updateRegularDrug(drug: Drug) {
+        this.decreaseBenefit(drug);
+        if (drug.expiresIn < 0) {
+            this.decreaseBenefit(drug);
+        }
+    }
+
+    public updateBenefitValue(): Drug[] {
+        for (const drug of this.drugs) {
+            if (drug.name === "Magic Pill") {
+                continue;
             }
-            if (this.drugs[i].name != "Magic Pill") {
-                this.drugs[i].expiresIn = this.drugs[i].expiresIn - 1;
-            }
-            if (this.drugs[i].expiresIn < 0) {
-                if (this.drugs[i].name != "Herbal Tea") {
-                    if (this.drugs[i].name != "Fervex") {
-                        if (this.drugs[i].benefit > 0) {
-                            if (this.drugs[i].name != "Magic Pill") {
-                                this.drugs[i].benefit = this.drugs[i].benefit - 1;
-                            }
-                        }
-                    } else {
-                        this.drugs[i].benefit =
-                            this.drugs[i].benefit - this.drugs[i].benefit;
-                    }
-                } else {
-                    if (this.drugs[i].benefit < 50) {
-                        this.drugs[i].benefit = this.drugs[i].benefit + 1;
-                    }
-                }
+
+            drug.expiresIn--;
+
+            switch (drug.name) {
+                case "Fervex":
+                    this.updateFervex(drug);
+                    break;
+                case "Herbal Tea":
+                    this.updateHerbalTea(drug);
+                    break;
+                default:
+                    this.updateRegularDrug(drug);
+                    break;
             }
         }
 
