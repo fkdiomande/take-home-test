@@ -43,5 +43,5 @@ We expect you to spend no more than 2 hours on this assignment. We value the qua
 To make sure that you will not break anything in the existing code, we added the result of the simulation in the _output.json_ file. Make sure that your code is able to generate a file with identical content. You can generate a new file by running the following command:
 
 ```sh
-yarn start
+bun run start
 ```
